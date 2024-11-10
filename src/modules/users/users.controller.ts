@@ -11,19 +11,22 @@ import {
 import { CreateUserDto } from './dtos/create-user.dto';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UsersService } from './users.service';
+import { User } from '@prisma/client';
+import { LoginResponse } from './interfaces/users-login.interface';
 
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
   @Post('register')
-  registerUser(@Body() createUserDto: CreateUserDto): string {
-    console.log(createUserDto);
-    return 'Post User;';
+  async registerUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return this.usersService.registerUser(createUserDto);
   }
 
   @Post('login')
-  loginUser(@Body() loginUserDto: LoginUserDto): string {
-    console.log(loginUserDto);
-    return 'Login User!';
+  loginUser(@Body() loginUserDto: LoginUserDto): Promise<LoginResponse> {
+    return this.usersService.loginUser(loginUserDto);
   }
 
   @Get('me')
@@ -32,16 +35,16 @@ export class UsersController {
   }
 
   @Patch(':id')
-  updateUser(
+  async updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
-  ): string {
-    console.log(updateUserDto);
-    return `Update User ${id}`;
+  ): Promise<User> {
+    return this.usersService.updateUser(+id, updateUserDto);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id', ParseIntPipe) id: string): string {
-    return `Delete User ${id}`;
+  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<string> {
+    // call users service method to delete user
+    return this.usersService.deleteUser(+id);
   }
 }
