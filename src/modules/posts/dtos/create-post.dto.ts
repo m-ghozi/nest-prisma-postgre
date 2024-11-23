@@ -10,5 +10,5 @@ export class CreatePostDto {
   @IsNotEmpty()
   published: boolean = false;
 
-  authoId: number;
+  authorId: number;
 }

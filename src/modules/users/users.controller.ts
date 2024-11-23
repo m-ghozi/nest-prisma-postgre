@@ -21,17 +21,7 @@ import { User } from '@prisma/client';
 import { LoginResponse, UserPayload } from './interfaces/users-login.interface';
 import { ExpreesRequestWithUser } from './interfaces/express-request-with-user.interface';
 import { Public } from 'src/common/decorators/public.decorator';
-
-@Injectable()
-export class IsMineGuard implements CanActivate {
-  constructor() {}
-
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-
-    return parseInt(request.params.id) === request.user.sub;
-  }
-}
+import { IsMineGuard } from 'src/common/guards/is-mine.guard';
 
 @Controller('users')
 export class UsersController {
